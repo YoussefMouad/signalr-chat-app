@@ -1,0 +1,22 @@
+.login-card {
+  max-width: 500px;
+  overflow: auto;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.container {
+  height: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-card-actions {
+  text-align: end;
+}

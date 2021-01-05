@@ -38,6 +38,15 @@ namespace ChatApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChatApi", Version = "v1" });
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("https://localhost:4200", "http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,6 +76,8 @@ namespace ChatApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChatApi v1"));
             }
+            
+            app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
 
