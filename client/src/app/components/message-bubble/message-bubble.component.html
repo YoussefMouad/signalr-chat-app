@@ -1,0 +1,9 @@
+<div [class]="isCurrentUser ? 'align-right' : ''">
+  <span
+    class="bubble bubble-right"
+    [class.bubble-right]="isCurrentUser"
+    [class.bubble-left]="!isCurrentUser"
+  >
+    {{ message }}
+  </span>
+</div>

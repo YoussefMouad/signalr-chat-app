@@ -1,0 +1,19 @@
+.bubble {
+  max-width: 75%;
+  display: inline-block;
+  margin: 4px;
+  padding: 4px 12px;
+  border-radius: 45px;
+}
+
+.bubble-left {
+  background-color: #1d8bf1;
+}
+
+.bubble-right {
+  background-color: #e91e63;
+}
+
+.align-right {
+  text-align: end;
+}

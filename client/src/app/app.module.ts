@@ -18,6 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule  } from '@angular/material/input';
+import { MessageBubbleComponent } from './components/message-bubble/message-bubble.component';
 
 const materialImports = [
   MatToolbarModule,
@@ -36,6 +37,7 @@ const materialImports = [
     LoginPageComponent,
     SignupPageComponent,
     ChatPageComponent,
+    MessageBubbleComponent,
   ],
   imports: [
     BrowserModule,

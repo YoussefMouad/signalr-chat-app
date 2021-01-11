@@ -13,3 +13,22 @@
 .sidenav {
   width: 200px;
 }
+
+.d-flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 8px;
+  height: 100%;
+  flex: 1 1 auto;
+}
+
+.message {
+  padding: 8px;
+}
+
+.message > mat-form-field {
+  width: 100%;
+}

@@ -29,5 +29,32 @@
     </mat-nav-list>
   </mat-sidenav>
 
-  <mat-sidenav-content> content </mat-sidenav-content>
+  <mat-sidenav-content class="d-flex">
+    <div class="content">
+      <app-message-bubble
+        *ngFor="let msg of messages"
+        [message]="msg.message"
+        [isCurrentUser]="msg.sender === username"
+      ></app-message-bubble>
+    </div>
+    <div class="message">
+      <mat-form-field>
+        <mat-label>Message</mat-label>
+        <input
+          matInput
+          [(ngModel)]="message"
+          (keyup)="onMessageKeyUp($event)"
+        />
+        <button
+          mat-button
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="sendMessage()"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </mat-sidenav-content>
 </mat-sidenav-container>

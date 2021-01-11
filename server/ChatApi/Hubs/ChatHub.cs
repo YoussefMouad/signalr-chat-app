@@ -30,6 +30,7 @@ namespace ChatApi.Hubs
 
         public Task SendMessage(string user, string message)
         {
+            _logger.LogInformation("SendMessage : {0} - {1}", user, message);
             return Clients.All.SendAsync("ReceiveMessage", user, message);
         }
     }
