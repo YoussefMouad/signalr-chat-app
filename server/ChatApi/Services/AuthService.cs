@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -12,19 +14,29 @@ namespace ChatApi.Services
     {
         private const double EXPIRE_HOURS = 24D;
         private readonly IConfiguration _configuration;
+        private readonly List<User> _users;
 
         public AuthService(IConfiguration configuration)
         {
             _configuration = configuration;
+            _users = new List<User>();
         }
 
         public User AuthenticateUser(string username, string password)
         {
-            return new User()
+            return _users.FirstOrDefault(x => x.Username == username && x.Password == password);
+        }
+
+        public User CreateUser(User user)
+        {
+            var existedUser = _users.FirstOrDefault(x => x.Username == user.Username || x.Email == user.Email);
+            if (existedUser != null)
             {
-                Id = Guid.NewGuid(),
-                Username = "User - " + DateTime.Now.Second,
-            };
+                return existedUser;
+            }
+            user.Id = Guid.NewGuid();
+            _users.Add(user);
+            return user;
         }
 
         public string CreateToken(User user)
