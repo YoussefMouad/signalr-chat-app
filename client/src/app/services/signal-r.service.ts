@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HubConnectionBuilder, LogLevel } from "@aspnet/signalr";
+import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -13,7 +14,7 @@ export class SignalRService {
   public startConnection(hub: string): void {
 
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(`https://localhost:5001/${hub}`, { accessTokenFactory: () => this.authService.token })
+      .withUrl(`${environment.baseUrl}/${hub}`, { accessTokenFactory: () => this.authService.token })
       .configureLogging(LogLevel.Information)
       .build();
 

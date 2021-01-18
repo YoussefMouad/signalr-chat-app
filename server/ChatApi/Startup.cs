@@ -46,7 +46,7 @@ namespace ChatApi
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("https://localhost:4200", "http://localhost:4200")
+                    builder => builder.WithOrigins(Configuration["Origins"].Split(","))
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
@@ -91,10 +91,10 @@ namespace ChatApi
             });
 
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
+            // services.AddSpaStaticFiles(configuration =>
+            // {
+            //     configuration.RootPath = "ClientApp/dist";
+            // });
 
             services.AddSignalR();
         }
@@ -125,17 +125,17 @@ namespace ChatApi
                 endpoints.MapHub<ChatHub>("/chathub");
             });
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"ClientApp/dist")),
-                RequestPath = new PathString("")
-            });
+            //app.UseDefaultFiles();
+            //app.UseStaticFiles(new StaticFileOptions()
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"ClientApp/dist")),
+            //    RequestPath = new PathString("")
+            //});
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-            });
+            //app.UseSpa(spa =>
+            //{
+            //    spa.Options.SourcePath = "ClientApp";
+            //});
         }
     }
 }
