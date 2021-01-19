@@ -61,10 +61,21 @@ namespace ChatApi.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public Task SendMessage(string user, string message)
+        public Task SendMessage(string message, string user)
         {
-            _logger.LogInformation("SendMessage : {0} - {1}", user, message);
-            return Clients.All.SendAsync("ReceiveMessage", user, message);
+            _logger.LogInformation("SendMessage : {0} - {1}", message, user);
+            return Clients.All.SendAsync("ReceiveMessage", message, user);
+        }
+
+        public async Task SendTo(string message, string receiverId)
+        {
+            if (!string.IsNullOrEmpty(message.Trim()) && _connectionsMap.TryGetValue(receiverId, out List<string> connections))
+            {
+                // Send the message
+                var sender = Context.UserIdentifier;
+                await Clients.Clients(connections).SendAsync("ReceivePrivateMessage", message, sender);
+                await Clients.Caller.SendAsync("ReceivePrivateMessage", message, sender, receiverId);
+            }
         }
     }
 }

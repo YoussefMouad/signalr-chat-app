@@ -32,3 +32,12 @@
 .message > mat-form-field {
   width: 100%;
 }
+
+.active {
+  background: rgba(233, 30, 99, 0.15);
+  color: #e91e63;
+}
+
+.active:hover {
+  background: rgba(233, 30, 99, 0.3);
+}

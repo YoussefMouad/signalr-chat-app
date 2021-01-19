@@ -23,8 +23,15 @@
 <mat-sidenav-container class="container">
   <mat-sidenav mode="side" [(opened)]="sidenav" class="sidenav">
     <mat-nav-list>
-      <mat-list-item *ngFor="let user of users | keyvalue">
-        <a matLine href="...">{{ user.value.fullname }}</a>
+      <mat-list-item [class.active]="isAllChat" (click)="onSelectAllChat()">
+        All chat
+      </mat-list-item>
+      <mat-list-item
+        *ngFor="let user of users"
+        [class.active]="user.active"
+        (click)="onSelectUser(user.id)"
+      >
+        {{ user.fullname }}
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
@@ -34,7 +41,7 @@
       <app-message-bubble
         *ngFor="let msg of messages"
         [message]="msg.message"
-        [isCurrentUser]="msg.sender === username"
+        [isCurrentUser]="msg.sender === user.id"
       ></app-message-bubble>
     </div>
     <div class="message">

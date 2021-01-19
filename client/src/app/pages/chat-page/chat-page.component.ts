@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from 'src/app/models';
 import { AuthService } from 'src/app/services/auth.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
@@ -12,26 +13,27 @@ export class ChatPageComponent implements OnInit {
   public sidenav = true;
   public users: Array<User> = [];
 
+  public usersMessages: Map<string, Array<Message>> = new Map();
+  public allChatMessages: Array<Message> = [];
   public messages: Array<Message> = [];
   public message: string;
-  public username: string = null;
+  public user: User = null;
+  public isAllChat = true;
+  public selectedChat: User = null;
 
   constructor(
     private authService: AuthService,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
-    this.username = this.authService.user.username;
+    this.user = this.authService.user;
+    this.messages = this.allChatMessages;
     this.signalRService.startConnection("chathub");
 
-    this.signalRService.registerEvent("ReceiveMessage", (sender, message) => {
-      this.messages.push({ message, sender });
-    });
-
     this.signalRService.registerEvent("UsersList", (users: Array<User>) => {
-      this.users = users.filter(x => x.username !== this.username);
-      console.log("UsersList", this.users);
+      this.users = users.filter(x => x.username !== this.user.username);
     });
 
     this.signalRService.registerEvent("UserConnected", (user) => {
@@ -41,10 +43,30 @@ export class ChatPageComponent implements OnInit {
     this.signalRService.registerEvent("UserDisconnected", (userId) => {
       this.users = this.users.filter(x => x.id !== userId);
     });
+
+    this.signalRService.registerEvent("ReceiveMessage", (message, sender) => {
+      this.allChatMessages.push({ message, sender });
+    });
+
+    this.signalRService.registerEvent("ReceivePrivateMessage", (message, sender, reciever?) => {
+      if (sender === this.user.id) {
+        this.getRoom(reciever).push({ message, sender });
+      } else {
+        this.getRoom(sender).push({ message, sender });
+        const user = this.users.find(x => x.id === sender);
+        if (user) {
+          this.openSnackBar(`${user.fullname} said: ${message}`, "View", sender);
+        }
+      }
+    });
   }
 
   public sendMessage(): void {
-    this.signalRService.sendEvent("SendMessage", this.username, this.message);
+    if (this.isAllChat) {
+      this.signalRService.sendEvent("SendMessage", this.message, this.user.id);
+    } else if (this.selectedChat) {
+      this.signalRService.sendEvent("SendTo", this.message, this.selectedChat.id);
+    }
     this.message = "";
   }
 
@@ -52,6 +74,44 @@ export class ChatPageComponent implements OnInit {
     if ($event.key === "Enter") {
       this.sendMessage();
     }
+  }
+
+  public onSelectUser(userId: string): void {
+    this.users.forEach(x => x.active = false);
+    this.isAllChat = false;
+    const user = this.users.find(x => x.id === userId);
+    user.active = true;
+    this.selectedChat = user;
+    this.messages = this.getRoom(user.id);
+  }
+
+  public onSelectAllChat(): void {
+    this.users.forEach(x => x.active = false);
+    this.isAllChat = true;
+    this.selectedChat = null;
+    this.messages = this.getRoom();
+  }
+
+  private getRoom(sender?: string): Array<Message> {
+    if (sender) {
+      const id = sender ?? this.selectedChat.id;
+      if (!this.usersMessages.has(id)) {
+        this.usersMessages.set(id, []);
+      }
+      return this.usersMessages.get(id);
+    } else if (this.isAllChat) {
+      return this.allChatMessages;
+    }
+  }
+
+  private openSnackBar(message: string, action: string, param: any): void {
+    this.snackBar.open(message, action, {
+      duration: 5000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+    }).onAction().subscribe(() => {
+      this.onSelectUser(param);
+    });
   }
 }
 

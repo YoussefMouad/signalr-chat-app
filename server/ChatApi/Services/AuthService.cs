@@ -36,6 +36,14 @@ namespace ChatApi.Services
                 Username = "myoussef2",
                 Password = "123",
             });
+            _users.Add(new User()
+            {
+                Id = new Guid("abf68946-5d0d-42b4-8b53-e1291469bc66"),
+                Email = "imouad.you3@gmail.com",
+                Fullname = "Mouad Youssef 3",
+                Username = "myoussef3",
+                Password = "123",
+            });
         }
 
         public User AuthenticateUser(string username, string password)
