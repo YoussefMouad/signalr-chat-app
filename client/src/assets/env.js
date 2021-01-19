@@ -2,7 +2,7 @@
   window["env"] = window["env"] || {};
 
   // Environment variables
-  window["env"]["apiUrl"] = "http://localhost:5000/api";
-  window["env"]["baseUrl"] = "http://localhost:5000";
+  window["env"]["apiUrl"] = "https://chatapi.mouadyoussef.com/api";
+  window["env"]["baseUrl"] = "https://chatapi.mouadyoussef.com";
   window["env"]["debug"] = true;
 })(this);
