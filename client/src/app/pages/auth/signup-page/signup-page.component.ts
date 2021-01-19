@@ -39,6 +39,7 @@ export class SignupPageComponent implements OnInit {
   }
 
   public onSubmit(): void {
+    this.formGroup.markAllAsTouched();
     if (this.formGroup.valid) {
       const user: User = {
         email: this.email.value,
@@ -48,6 +49,13 @@ export class SignupPageComponent implements OnInit {
       };
 
       this.authService.register(user).subscribe(() => this.router.navigate(["/"]));
+    }
+  }
+
+  public onKeyUp($event: KeyboardEvent): void {
+    console.log($event.key);
+    if ($event.key === "Enter") {
+      this.onSubmit();
     }
   }
 }

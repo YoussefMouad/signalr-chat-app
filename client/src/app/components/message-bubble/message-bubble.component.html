@@ -1,4 +1,5 @@
 <div [class]="isCurrentUser ? 'align-right' : ''">
+  <small *ngIf="username">{{ username }}</small>
   <span
     class="bubble bubble-right"
     [class.bubble-right]="isCurrentUser"

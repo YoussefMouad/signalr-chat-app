@@ -2,7 +2,7 @@
   <button mat-icon-button aria-label="sidenav" (click)="sidenav = !sidenav">
     <mat-icon>menu</mat-icon>
   </button>
-  <span>{{ username }}</span>
+  <span>{{ user.fullname }}</span>
   <span class="spacer"></span>
   <button
     mat-icon-button
@@ -41,6 +41,7 @@
       <app-message-bubble
         *ngFor="let msg of messages"
         [message]="msg.message"
+        [username]="msg.username"
         [isCurrentUser]="msg.sender === user.id"
       ></app-message-bubble>
     </div>

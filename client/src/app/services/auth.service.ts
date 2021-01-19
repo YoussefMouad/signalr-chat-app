@@ -42,6 +42,7 @@ export class AuthService {
       localStorage.setItem('authUser', JSON.stringify(response.user));
       localStorage.setItem('token', JSON.stringify(response.token));
       this.userSubject$.next(response.user);
+      this.token = response.token;
     }
   }
 }

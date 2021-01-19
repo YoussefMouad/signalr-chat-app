@@ -9,6 +9,7 @@ export class MessageBubbleComponent implements OnInit {
 
   @Input() public isCurrentUser = false;
   @Input() public message: string = null;
+  @Input() public username: string = null;
 
   constructor() { }
 

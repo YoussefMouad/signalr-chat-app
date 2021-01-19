@@ -45,7 +45,8 @@ export class ChatPageComponent implements OnInit {
     });
 
     this.signalRService.registerEvent("ReceiveMessage", (message, sender) => {
-      this.allChatMessages.push({ message, sender });
+      const username = sender !== this.user.id ? this.getUser(sender).fullname : null;
+      this.allChatMessages.push({ message, sender, username });
     });
 
     this.signalRService.registerEvent("ReceivePrivateMessage", (message, sender, reciever?) => {
@@ -59,6 +60,10 @@ export class ChatPageComponent implements OnInit {
         }
       }
     });
+  }
+
+  private getUser(userId: string): User {
+    return this.users.find(x => x.id === userId);
   }
 
   public sendMessage(): void {
@@ -79,7 +84,7 @@ export class ChatPageComponent implements OnInit {
   public onSelectUser(userId: string): void {
     this.users.forEach(x => x.active = false);
     this.isAllChat = false;
-    const user = this.users.find(x => x.id === userId);
+    const user = this.getUser(userId);
     user.active = true;
     this.selectedChat = user;
     this.messages = this.getRoom(user.id);
@@ -118,4 +123,5 @@ export class ChatPageComponent implements OnInit {
 interface Message {
   message: string;
   sender: string;
+  username?: string;
 }

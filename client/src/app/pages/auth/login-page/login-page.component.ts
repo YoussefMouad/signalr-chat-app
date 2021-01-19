@@ -25,12 +25,21 @@ export class LoginPageComponent implements OnInit {
   public onSubmit(): void {
     this.authService.authenticate(this.username, this.password)
       .subscribe(response => {
+        console.log(response);
         if (response.error) {
           this.openSnackBar(response.error, "Close");
         } else {
+
+          console.log("here!!!");
           this.router.navigate(["/"]);
         }
       });
+  }
+
+  public onKeyUp($event: KeyboardEvent): void {
+    if ($event.key === "Enter") {
+      this.onSubmit();
+    }
   }
 
   private openSnackBar(message: string, action: string): void {
