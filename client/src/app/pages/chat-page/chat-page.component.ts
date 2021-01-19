@@ -55,7 +55,7 @@ export class ChatPageComponent implements OnInit {
       } else {
         this.getRoom(sender).push({ message, sender });
         const user = this.users.find(x => x.id === sender);
-        if (user) {
+        if (user && this.selectedChat?.id !== user.id) {
           this.openSnackBar(`${user.fullname} said: ${message}`, "View", sender);
         }
       }
