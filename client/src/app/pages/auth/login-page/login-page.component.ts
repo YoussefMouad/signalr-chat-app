@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -12,13 +13,29 @@ export class LoginPageComponent implements OnInit {
   public username = "";
   public password = "";
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar,
+  ) { }
 
   ngOnInit(): void {
   }
 
   public onSubmit(): void {
     this.authService.authenticate(this.username, this.password)
-      .subscribe(() => this.router.navigate([""]));
+      .subscribe(response => {
+        if (response.error) {
+          this.openSnackBar(response.error, "Close");
+        } else {
+          this.router.navigate(["/"]);
+        }
+      });
+  }
+
+  private openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action, {
+      duration: 5000,
+    });
   }
 }

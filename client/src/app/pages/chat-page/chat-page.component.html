@@ -23,8 +23,8 @@
 <mat-sidenav-container class="container">
   <mat-sidenav mode="side" [(opened)]="sidenav" class="sidenav">
     <mat-nav-list>
-      <mat-list-item *ngFor="let user of users">
-        <a matLine href="...">{{ user }}</a>
+      <mat-list-item *ngFor="let user of users | keyvalue">
+        <a matLine href="...">{{ user.value.fullname }}</a>
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
@@ -42,6 +42,7 @@
         <mat-label>Message</mat-label>
         <input
           matInput
+          name="message"
           [(ngModel)]="message"
           (keyup)="onMessageKeyUp($event)"
         />

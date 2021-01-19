@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../models';
 
@@ -26,26 +26,28 @@ export class AuthService {
     this.token = JSON.parse(localStorage.getItem('token'));
   }
 
-  public authenticate(username: string, password: string): Observable<User> {
+  public authenticate(username: string, password: string): Observable<AuthResponse> {
     return this.httpClient.post(`${environment.apiUrl}/auth`, { username, password })
-      .pipe(map(this.setUser));
+      .pipe(tap(this.setUser));
   }
 
-  public register(user: User): Observable<User> {
+  public register(user: User): Observable<AuthResponse> {
     return this.httpClient.put(`${environment.apiUrl}/auth`, user)
-      .pipe(map(this.setUser));
+      .pipe(tap(this.setUser));
   }
 
-  private setUser = (response: AuthResponse): User => {
+  private setUser = (response: AuthResponse) => {
     // store user details and jwt token in local storage to keep user logged in between page refreshes
-    localStorage.setItem('authUser', JSON.stringify(response.user));
-    localStorage.setItem('token', JSON.stringify(response.token));
-    this.userSubject$.next(response.user);
-    return response.user;
+    if (!response.error) {
+      localStorage.setItem('authUser', JSON.stringify(response.user));
+      localStorage.setItem('token', JSON.stringify(response.token));
+      this.userSubject$.next(response.user);
+    }
   }
 }
 
 interface AuthResponse {
   user: User;
   token: string;
+  error: string;
 }

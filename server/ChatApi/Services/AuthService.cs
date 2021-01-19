@@ -20,11 +20,27 @@ namespace ChatApi.Services
         {
             _configuration = configuration;
             _users = new List<User>();
+            _users.Add(new User()
+            {
+                Id = new Guid("f7285734-3961-4106-ad5f-6ef0917d12d1"),
+                Email = "imouad.you@gmail.com",
+                Fullname = "Mouad Youssef",
+                Username = "myoussef",
+                Password = "123",
+            });
+            _users.Add(new User()
+            {
+                Id = new Guid("bea68946-5d0d-42b4-8b53-e1291469bc24"),
+                Email = "imouad.you2@gmail.com",
+                Fullname = "Mouad Youssef 2",
+                Username = "myoussef2",
+                Password = "123",
+            });
         }
 
         public User AuthenticateUser(string username, string password)
         {
-            return _users.FirstOrDefault(x => x.Username == username && x.Password == password);
+            return _users.FirstOrDefault(x => (x.Username == username || x.Email == username) && x.Password == password);
         }
 
         public User CreateUser(User user)
@@ -37,6 +53,11 @@ namespace ChatApi.Services
             user.Id = Guid.NewGuid();
             _users.Add(user);
             return user;
+        }
+
+        public User GetUser(Guid id)
+        {
+            return _users.FirstOrDefault(x => x.Id == id);
         }
 
         public string CreateToken(User user)

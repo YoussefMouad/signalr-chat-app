@@ -25,7 +25,7 @@ namespace ChatApi.Controllers
             var user = service.AuthenticateUser(model.Username, model.Password);
 
             if (user == null)
-                return NotFound(new { message = "User or password invalid" });
+                return new { error = "User or password invalid." };
 
             var token = service.CreateToken(user);
             return await Task.Run(() =>

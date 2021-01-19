@@ -2,7 +2,7 @@
   window["env"] = window["env"] || {};
 
   // Environment variables
-  window["env"]["apiUrl"] = "https://chatapi.mouadyoussef.com/api";
-  window["env"]["baseUrl"] = "https://chatapi.mouadyoussef.com";
+  window["env"]["apiUrl"] = "https://localhost:5001/api";
+  window["env"]["baseUrl"] = "https://localhost:5001";
   window["env"]["debug"] = true;
 })(this);

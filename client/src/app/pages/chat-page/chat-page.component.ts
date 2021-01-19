@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/models';
 import { AuthService } from 'src/app/services/auth.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
 
@@ -9,7 +10,7 @@ import { SignalRService } from 'src/app/services/signal-r.service';
 })
 export class ChatPageComponent implements OnInit {
   public sidenav = true;
-  public users: string[] = ["User 1", "User 2", "User 3"];
+  public users: Array<User> = [];
 
   public messages: Array<Message> = [];
   public message: string;
@@ -23,8 +24,22 @@ export class ChatPageComponent implements OnInit {
   ngOnInit(): void {
     this.username = this.authService.user.username;
     this.signalRService.startConnection("chathub");
+
     this.signalRService.registerEvent("ReceiveMessage", (sender, message) => {
       this.messages.push({ message, sender });
+    });
+
+    this.signalRService.registerEvent("UsersList", (users: Array<User>) => {
+      this.users = users.filter(x => x.username !== this.username);
+      console.log("UsersList", this.users);
+    });
+
+    this.signalRService.registerEvent("UserConnected", (user) => {
+      this.users.push(user);
+    });
+
+    this.signalRService.registerEvent("UserDisconnected", (userId) => {
+      this.users = this.users.filter(x => x.id !== userId);
     });
   }
 
